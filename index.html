@@ -1,0 +1,1779 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DevOps Roadmap Progress Tracker</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Work+Sans:wght@300;400;500;600&display=swap");
+
+    :root {
+      --ink-1: #f4f7fb;
+      --ink-2: #c7d0db;
+      --ink-3: #95a3b3;
+      --paper-1: #121722;
+      --paper-2: #1a212d;
+      --paper-3: #232c39;
+      --accent-1: #38c9a3;
+      --accent-2: #f18d5a;
+      --accent-3: #5ea3ff;
+      --accent-4: #b48bff;
+      --line-1: rgba(231, 237, 244, 0.12);
+      --line-2: rgba(231, 237, 244, 0.22);
+      --shadow: 0 18px 40px rgba(6, 8, 12, 0.45);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Work Sans", sans-serif;
+      color: var(--ink-1);
+      background:
+        radial-gradient(1000px 600px at 10% -10%, rgba(56, 201, 163, 0.2), transparent 70%),
+        radial-gradient(900px 500px at 90% 0%, rgba(241, 141, 90, 0.18), transparent 70%),
+        linear-gradient(180deg, #0b0f16 0%, #121826 100%);
+      min-height: 100vh;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='120' height='120' filter='url(%23n)' opacity='0.07'/></svg>");
+      mix-blend-mode: soft-light;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+      display: grid;
+      gap: 24px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .title-block {
+      background: var(--paper-1);
+      border: 1px solid var(--line-1);
+      border-radius: var(--radius-lg);
+      padding: 24px 26px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .title-block::after {
+      content: "";
+      position: absolute;
+      inset: -40% -30% auto auto;
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle, rgba(13, 107, 90, 0.18), transparent 70%);
+    }
+
+    .title-block h1 {
+      font-family: "Fraunces", serif;
+      font-size: 32px;
+      letter-spacing: 0.4px;
+      margin-bottom: 8px;
+    }
+
+    .title-block p {
+      color: var(--ink-3);
+      font-size: 14px;
+      max-width: 520px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--paper-1);
+      border: 1px solid var(--line-1);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-3);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .stat-meta {
+      font-size: 12px;
+      color: var(--ink-3);
+      margin-top: 4px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid var(--line-2);
+      background: var(--ink-1);
+      color: var(--paper-1);
+      font-size: 13px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    }
+
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 18px rgba(6, 8, 12, 0.55); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .btn-alt {
+      background: transparent;
+      color: var(--ink-1);
+    }
+
+    .progress-card {
+      background: var(--paper-1);
+      border: 1px solid var(--line-1);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      display: grid;
+      gap: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: var(--paper-2);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--line-1);
+    }
+
+    .progress-bar span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-3));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .badge-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+    }
+
+    .badge {
+      border: 1px dashed var(--line-2);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      background: var(--paper-2);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .badge.earned {
+      border-style: solid;
+      background: var(--paper-3);
+      color: var(--ink-1);
+    }
+
+    .tab-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--line-2);
+      background: var(--paper-2);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--ink-1);
+      color: var(--paper-1);
+      border-color: var(--ink-1);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .section {
+      background: var(--paper-1);
+      border: 1px solid var(--line-1);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .section h2 {
+      font-family: "Fraunces", serif;
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .section p { color: var(--ink-3); font-size: 13px; margin-bottom: 14px; }
+
+    .trackline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .trackline input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent-1);
+    }
+
+    .trackline .track-label { font-size: 13px; color: var(--ink-2); }
+
+    .trackline.done .track-label { text-decoration: line-through; color: var(--ink-3); }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    /* Roadmap and resources base styling (adapted) */
+    .roadmap { padding: 0; }
+    .phase { margin-bottom: 22px; border: 1px solid var(--line-1); border-radius: var(--radius-lg); overflow: hidden; background: var(--paper-1); }
+    .phase-header { padding: 14px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+    .phase-header:hover { background: rgba(231, 237, 244, 0.06); }
+    .phase-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+    .phase-title { font-size: 15px; font-weight: 600; color: var(--ink-1); flex: 1; }
+    .phase-meta { font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+    .chevron { font-size: 12px; color: var(--ink-3); transition: transform 0.2s; }
+    .phase-body { border-top: 1px solid var(--line-1); display: none; }
+    .phase-body.open { display: block; }
+    .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1px; background: var(--line-1); }
+    .topic-card { background: var(--paper-1); padding: 16px 20px; display: grid; gap: 8px; }
+    .topic-name { font-size: 13px; font-weight: 600; color: var(--ink-1); }
+    .topic-tools { font-size: 12px; color: var(--ink-3); }
+    .depth-bar { display: flex; gap: 3px; align-items: center; }
+    .depth-pip { width: 18px; height: 4px; border-radius: 2px; background: rgba(15, 20, 26, 0.12); }
+    .depth-pip.on { background: var(--depth-color, #888); }
+    .depth-label { font-size: 11px; color: var(--ink-3); margin-left: 4px; }
+    .topic-note { font-size: 12px; color: var(--ink-3); line-height: 1.5; }
+    .phase-footer { padding: 12px 20px; background: var(--paper-2); border-top: 1px solid var(--line-1); font-size: 12px; color: var(--ink-3); display: flex; gap: 20px; flex-wrap: wrap; }
+    .legend { display: flex; align-items: center; gap: 14px; padding: 0 0 16px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-3); }
+    .legend-pip { width: 28px; height: 4px; border-radius: 2px; }
+    .timeline-bar { display: flex; align-items: center; gap: 0; margin-bottom: 24px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--line-1); }
+    .tbar-seg { padding: 8px 0; text-align: center; font-size: 11px; font-weight: 600; }
+
+    .resources .container { padding: 0; }
+    .phase-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .phase-tab { padding: 6px 14px; border: 1px solid var(--line-1); border-radius: var(--radius-md); font-size: 13px; cursor: pointer; background: var(--paper-1); color: var(--ink-3); transition: all 0.15s; }
+    .phase-tab.active { background: rgba(56, 201, 163, 0.16); color: var(--accent-1); border-color: rgba(56, 201, 163, 0.5); font-weight: 600; }
+    .phase-content { display: none; }
+    .phase-content.active { display: block; }
+    .resources .phase-header { padding: 1rem 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--line-1); background: var(--paper-2); margin-bottom: 1rem; }
+    .resources .phase-meta { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+    .resources .topic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 1.5rem; background: none; }
+    .resources .topic-card { background: var(--paper-1); border: 1px solid var(--line-1); border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
+    .topic-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .topic-title { font-size: 14px; font-weight: 600; color: var(--ink-1); }
+    .depth-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+    .depth-awareness { background: #e6f1fb; color: #0c447c; }
+    .depth-working { background: #eaf3de; color: #27500a; }
+    .depth-deep { background: #faece7; color: #712b13; }
+    .resource-section { margin-bottom: 8px; }
+    .resource-label { font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+    .resource-list { list-style: none; }
+    .resource-list li { font-size: 12px; color: var(--ink-1); padding: 2px 0; display: flex; align-items: flex-start; gap: 8px; }
+    .resource-list a { color: var(--accent-3); text-decoration: none; }
+    .resource-list a:hover { text-decoration: underline; }
+    .projects-section { margin-top: 1.5rem; }
+    .projects-header { font-size: 14px; font-weight: 600; color: var(--ink-1); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--line-1); }
+    .project-list { display: flex; flex-direction: column; gap: 8px; }
+    .project-item { background: var(--paper-2); border-radius: var(--radius-md); padding: 10px 14px; display: flex; gap: 10px; align-items: flex-start; }
+    .project-num { font-size: 11px; font-weight: 600; color: var(--accent-3); background: rgba(94, 163, 255, 0.18); padding: 2px 7px; border-radius: 20px; flex-shrink: 0; }
+    .project-body { flex: 1; }
+    .project-name { font-size: 13px; font-weight: 600; color: var(--ink-1); margin-bottom: 2px; }
+    .project-desc { font-size: 12px; color: var(--ink-3); line-height: 1.5; }
+
+    .prereq-block { border: 1px solid rgba(241, 141, 90, 0.35); background: rgba(241, 141, 90, 0.08); border-radius: var(--radius-lg); padding: 16px 18px; margin: 16px 20px 6px; }
+    .prereq-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #f6b99a; margin-bottom: 10px; }
+    .prereq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .prereq-item { background: var(--paper-2); border: 1px solid var(--line-1); border-radius: var(--radius-md); padding: 10px 12px; display: grid; gap: 6px; }
+    .prereq-label { font-size: 12px; font-weight: 600; color: var(--ink-1); }
+    .prereq-why { font-size: 11px; color: var(--ink-3); line-height: 1.5; }
+    .prereq-links { list-style: none; display: grid; gap: 4px; }
+    .prereq-links li { font-size: 11px; color: var(--ink-2); display: flex; gap: 6px; align-items: flex-start; }
+    .prereq-links li::before { content: "→"; color: var(--ink-3); }
+    .prereq-links a { color: var(--accent-3); text-decoration: none; }
+    .prereq-links a:hover { text-decoration: underline; }
+
+    @media (max-width: 900px) {
+      header { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .phase-header { flex-direction: column; align-items: flex-start; }
+      .phase-meta { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="page">
+    <header>
+      <div class="title-block">
+        <h1>DevOps Roadmap Progress Tracker</h1>
+        <p>Track every milestone, resource, and project. Earn points for consistency, keep a daily streak, and stay focused through each phase.</p>
+        <div class="actions">
+          <button id="checkInBtn" class="btn">Mark Today Done</button>
+          <button id="resetBtn" class="btn btn-alt">Reset Progress</button>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-title">Streak</div>
+          <div class="stat-value" id="streakValue">0 days</div>
+          <div class="stat-meta" id="streakMeta">Start today to build momentum.</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Points</div>
+          <div class="stat-value" id="pointsValue">0</div>
+          <div class="stat-meta" id="levelValue">Level 1</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Completed Items</div>
+          <div class="stat-value" id="completedValue">0 / 0</div>
+          <div class="stat-meta" id="completedMeta">0% complete</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Next Reward</div>
+          <div class="stat-value" id="rewardValue">No reward yet</div>
+          <div class="stat-meta" id="rewardMeta">Keep going for your first badge.</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="progress-card">
+      <div class="trackline">
+        <strong>Progress overview</strong>
+      </div>
+      <div class="progress-bar"><span id="progressFill"></span></div>
+      <div class="badge-row" id="badgeRow"></div>
+    </section>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="roadmap">Roadmap</button>
+      <button class="tab-btn" data-tab="resources">Resources and Projects</button>
+    </div>
+
+    <section class="section tab-panel active" id="tab-roadmap">
+      <h2>Roadmap Phases</h2>
+      <p>Track the core DevOps roadmap topics. Expand a phase, then check off each topic as you master it.</p>
+
+      <div class="roadmap">
+        <h2 style="font-size:18px;font-weight:600;margin-bottom:4px;color:var(--ink-1)">DevOps learning roadmap</h2>
+        <p style="font-size:13px;color:var(--ink-3);margin-bottom:16px">Beginner to Senior. Estimated 24 months total. Click a phase to expand.</p>
+
+        <div class="timeline-bar">
+          <div class="tbar-seg" style="width:17%;background:#EAF3DE;color:#3B6D11">Phase 1<br>0 to 4 mo</div>
+          <div class="tbar-seg" style="width:21%;background:#E6F1FB;color:#185FA5">Phase 2<br>4 to 9 mo</div>
+          <div class="tbar-seg" style="width:21%;background:#EEEDFE;color:#534AB7">Phase 3<br>9 to 14 mo</div>
+          <div class="tbar-seg" style="width:21%;background:#FAEEDA;color:#854F0B">Phase 4<br>14 to 19 mo</div>
+          <div class="tbar-seg" style="width:20%;background:#FAECE7;color:#993C1D">Phase 5<br>19 to 24 mo</div>
+        </div>
+
+        <div class="legend">
+          <span style="font-size:12px;font-weight:600;color:var(--ink-3)">Depth level:</span>
+          <div class="legend-item"><div class="legend-pip" style="background:#3B6D11;width:18px"></div><div class="legend-pip" style="background:rgba(15,20,26,0.12);width:18px"></div><div class="legend-pip" style="background:rgba(15,20,26,0.12);width:18px"></div> Awareness</div>
+          <div class="legend-item"><div class="legend-pip" style="background:#185FA5;width:18px"></div><div class="legend-pip" style="background:#185FA5;width:18px"></div><div class="legend-pip" style="background:rgba(15,20,26,0.12);width:18px"></div> Working knowledge</div>
+          <div class="legend-item"><div class="legend-pip" style="background:#534AB7;width:18px"></div><div class="legend-pip" style="background:#534AB7;width:18px"></div><div class="legend-pip" style="background:#534AB7;width:18px"></div> Deep expertise</div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-header" onclick="togglePhase(this)">
+            <span class="phase-badge" style="background:#FDE1D4;color:#B24C1A">Phase 0</span>
+            <span class="phase-title">Before you start — the hidden prerequisites</span>
+            <span class="phase-meta">Not in the roadmap, but required to move fast in Phase 1</span>
+            <span class="chevron">▶</span>
+          </div>
+          <div class="phase-body">
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-name">How computers and OS work</div>
+                <div class="topic-tools">Focus: processes, threads, system calls</div>
+                <div class="depth-bar" style="--depth-color:#B24C1A"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Without a model of processes, file descriptors, and system calls, Linux commands feel like magic.</div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=26QPDBe-NB8" target="_blank" rel="noreferrer">How computers work – Crash Course CS</a></li>
+                    <li><a href="https://www.youtube.com/playlist?list=PLBlnK6fEyqRiVhbXDGLXDk_OQAeuVcp2O" target="_blank" rel="noreferrer">Operating Systems – Neso Academy</a></li>
+                    <li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/" target="_blank" rel="noreferrer">Operating Systems: Three Easy Pieces</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Basic programming (any language)</div>
+                <div class="topic-tools">Focus: loops, conditionals, functions</div>
+                <div class="depth-bar" style="--depth-color:#B24C1A"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Bash scripts, Python automation, and Terraform all require core programming thinking.</div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=kqtD5dpn9C8" target="_blank" rel="noreferrer">Python for Beginners – Programming with Mosh</a></li>
+                    <li><a href="https://cs50.harvard.edu/python/2022/" target="_blank" rel="noreferrer">CS50P – Harvard Python</a></li>
+                    <li><a href="https://automatetheboringstuff.com/" target="_blank" rel="noreferrer">Automate the Boring Stuff (free book)</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">How the web works (HTTP basics)</div>
+                <div class="topic-tools">Focus: HTTP, DNS, TCP</div>
+                <div class="depth-bar" style="--depth-color:#B24C1A"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Docker ports, reverse proxies, and load balancers make sense only with HTTP and DNS basics.</div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=7_LPdttKXPc" target="_blank" rel="noreferrer">How the internet works – freeCodeCamp</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview" target="_blank" rel="noreferrer">HTTP overview – MDN</a></li>
+                    <li><a href="https://www.cloudflare.com/learning/dns/what-is-dns/" target="_blank" rel="noreferrer">What is DNS – Cloudflare</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Text editor and terminal comfort</div>
+                <div class="topic-tools">Focus: terminal navigation, basic editing</div>
+                <div class="depth-bar" style="--depth-color:#B24C1A"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">You will live in the terminal. Basics like navigation and editing should be muscle memory.</div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=RZ4p-saaQkc" target="_blank" rel="noreferrer">Vim basics in 8 minutes</a></li>
+                    <li><a href="https://www.openvim.com/" target="_blank" rel="noreferrer">OpenVim – interactive tutorial</a></li>
+                    <li><a href="https://code.visualstudio.com/docs/introvideos/basics" target="_blank" rel="noreferrer">VS Code basics (official)</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">YAML and JSON fluency</div>
+                <div class="topic-tools">Focus: indentation, structure, validation</div>
+                <div class="depth-bar" style="--depth-color:#B24C1A"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Kubernetes, CI/CD, Terraform, and Ansible are YAML/JSON. Small errors waste hours.</div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=1uFVr15xDGg" target="_blank" rel="noreferrer">YAML Tutorial – TechWorld with Nana</a></li>
+                    <li><a href="https://learnxinyminutes.com/docs/yaml/" target="_blank" rel="noreferrer">Learn YAML in Y minutes</a></li>
+                    <li><a href="https://jsonformatter.org/yaml-validator" target="_blank" rel="noreferrer">YAML validator</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Basic SQL and databases</div>
+                <div class="topic-tools">Focus: queries, schema, indexes</div>
+                <div class="depth-bar" style="--depth-color:#B24C1A"><div class="depth-pip on"></div><div class="depth-pip"></div><div class="depth-pip"></div><span class="depth-label">Awareness</span></div>
+                <div class="topic-note">Later phases include Postgres, Redis, and Kafka. Basic DB literacy removes friction.</div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=HXV3zeQKqGY" target="_blank" rel="noreferrer">SQL Tutorial – freeCodeCamp</a></li>
+                    <li><a href="https://sqlzoo.net/" target="_blank" rel="noreferrer">SQLZoo – interactive practice</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="projects-section">
+              <div class="projects-header">Starter exercises before Phase 1</div>
+              <div class="project-list">
+                <div class="project-item"><span class="project-num">E1</span><div class="project-body"><div class="project-name">Build and deploy a tiny Python web app locally</div><div class="project-desc">Write a 20-line Flask app that returns "Hello World" on a port. Run it, visit it in a browser, change the port, and restart.</div></div></div>
+                <div class="project-item"><span class="project-num">E2</span><div class="project-body"><div class="project-name">Write 10 YAML files from scratch</div><div class="project-desc">Draft configs for servers, environments, and workflows. Validate each with a YAML linter and fix intentional indentation errors.</div></div></div>
+                <div class="project-item"><span class="project-num">E3</span><div class="project-body"><div class="project-name">Set up a local Linux VM</div><div class="project-desc">Install Ubuntu on VirtualBox or WSL2. Navigate the filesystem, create users, install packages with apt, and SSH in.</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-header" onclick="togglePhase(this)">
+            <span class="phase-badge" style="background:#EAF3DE;color:#3B6D11">Phase 1</span>
+            <span class="phase-title">Foundations — Linux, Networking and Git</span>
+            <span class="phase-meta">Months 0 to 4 · ~400 hrs</span>
+            <span class="chevron">▶</span>
+          </div>
+          <div class="phase-body">
+            <div class="prereq-block">
+              <div class="prereq-title">Prerequisites for Phase 1</div>
+              <div class="prereq-grid">
+                <div class="prereq-item">
+                  <div class="prereq-label">Basic programming</div>
+                  <div class="prereq-why">Bash scripting equals programming: loops, conditionals, functions, and variables are required.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://cs50.harvard.edu/python/2022/" target="_blank" rel="noreferrer">CS50P (Harvard, free)</a></li>
+                  </ul>
+                </div>
+                <div class="prereq-item">
+                  <div class="prereq-label">OS concepts</div>
+                  <div class="prereq-why">Processes, file descriptors, and signals make Linux commands make sense.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/" target="_blank" rel="noreferrer">OSTEP (free book)</a></li>
+                  </ul>
+                </div>
+                <div class="prereq-item">
+                  <div class="prereq-label">YAML and JSON fluency</div>
+                  <div class="prereq-why">Config files for cloud, tooling, and scripts require fast, accurate edits.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://learnxinyminutes.com/docs/yaml/" target="_blank" rel="noreferrer">Learn YAML in Y minutes</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-name">Linux and Bash</div>
+                <div class="topic-tools">Tools: Ubuntu, Bash, Vim or Nano</div>
+                <div class="depth-bar" style="--depth-color:#3B6D11"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">File system, permissions, processes, cron, shell scripting. This is your daily environment — invest heavily here.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Networking basics</div>
+                <div class="topic-tools">Tools: curl, netstat, dig, Wireshark</div>
+                <div class="depth-bar" style="--depth-color:#3B6D11"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">TCP/IP, DNS, HTTP/S, ports, firewalls, load balancing concepts, NAT, subnets, VPNs.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Git and version control</div>
+                <div class="topic-tools">Tools: Git, GitHub or GitLab</div>
+                <div class="depth-bar" style="--depth-color:#3B6D11"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">Branching, merging, rebasing, PRs, tagging, Git hooks, monorepo vs polyrepo. Core skill.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Scripting (Python or Go)</div>
+                <div class="topic-tools">Tools: Python 3, Go</div>
+                <div class="depth-bar" style="--depth-color:#3B6D11"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Automate repetitive tasks. Python is faster to pick up; Go is preferred in cloud-native tooling later.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Cloud fundamentals (one provider)</div>
+                <div class="topic-tools">Tools: AWS, GCP, or Azure free tier</div>
+                <div class="depth-bar" style="--depth-color:#3B6D11"><div class="depth-pip on"></div><div class="depth-pip"></div><div class="depth-pip"></div><span class="depth-label">Awareness</span></div>
+                <div class="topic-note">EC2 or VMs, S3 or Blob storage, IAM, billing. Pick AWS first for market share.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">How software is built and deployed</div>
+                <div class="topic-tools">Tools: Make, npm, pip, Maven</div>
+                <div class="depth-bar" style="--depth-color:#3B6D11"><div class="depth-pip on"></div><div class="depth-pip"></div><div class="depth-pip"></div><span class="depth-label">Awareness</span></div>
+                <div class="topic-note">Understand build systems, artifacts, dependency managers. You serve developers — know how they work.</div>
+              </div>
+            </div>
+            <div class="phase-footer">
+              <span>Milestone: Comfortable in a Linux terminal, can write useful shell scripts, understand how a web request travels end-to-end.</span>
+              <span>Resources: Linux Journey, The Odin Project, Pro Git book (free).</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-header" onclick="togglePhase(this)">
+            <span class="phase-badge" style="background:#E6F1FB;color:#185FA5">Phase 2</span>
+            <span class="phase-title">Containers, CI/CD and Infrastructure as Code</span>
+            <span class="phase-meta">Months 4 to 9 · ~500 hrs</span>
+            <span class="chevron">▶</span>
+          </div>
+          <div class="phase-body">
+            <div class="prereq-block">
+              <div class="prereq-title">Prerequisites for Phase 2</div>
+              <div class="prereq-grid">
+                <div class="prereq-item">
+                  <div class="prereq-label">Linux processes and networking</div>
+                  <div class="prereq-why">Docker networking and container processes build on Linux process and network fundamentals.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://www.youtube.com/watch?v=IPvYjXCsTg8" target="_blank" rel="noreferrer">Networking for DevOps – TechWorld with Nana</a></li>
+                  </ul>
+                </div>
+                <div class="prereq-item">
+                  <div class="prereq-label">Web app structure</div>
+                  <div class="prereq-why">CI/CD builds and deploys apps; you need a clear mental model of web servers and ports.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps/Introduction" target="_blank" rel="noreferrer">MDN server-side intro</a></li>
+                  </ul>
+                </div>
+                <div class="prereq-item">
+                  <div class="prereq-label">Git at working level</div>
+                  <div class="prereq-why">Pipelines trigger on git events, branches, tags, and PR workflows.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://learngitbranching.js.org/" target="_blank" rel="noreferrer">Learn Git Branching</a></li>
+                  </ul>
+                </div>
+                <div class="prereq-item">
+                  <div class="prereq-label">Cloud console familiarity</div>
+                  <div class="prereq-why">Knowing how to click-create a VPC or EC2 makes Terraform abstractions intuitive.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://aws.amazon.com/free/" target="_blank" rel="noreferrer">AWS Free Tier hands-on</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-name">Docker</div>
+                <div class="topic-tools">Tools: Docker, Docker Compose, Docker Hub</div>
+                <div class="depth-bar" style="--depth-color:#185FA5"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">Images, containers, Dockerfiles, multi-stage builds, volumes, networks, Docker Compose for local dev.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">CI/CD pipelines</div>
+                <div class="topic-tools">Tools: GitHub Actions, GitLab CI, Jenkins</div>
+                <div class="depth-bar" style="--depth-color:#185FA5"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">Build to test to lint to scan to deploy pipelines. Understand triggers, artifacts, secrets, environments.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Infrastructure as Code (IaC)</div>
+                <div class="topic-tools">Tools: Terraform, Terragrunt, OpenTofu</div>
+                <div class="depth-bar" style="--depth-color:#185FA5"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">Write, plan, apply. State management, modules, workspaces, remote backends.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Configuration management</div>
+                <div class="topic-tools">Tools: Ansible (primary), Puppet or Chef (awareness)</div>
+                <div class="depth-bar" style="--depth-color:#185FA5"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Playbooks, roles, inventories, idempotency. Still common for VM-based infra.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Artifact and package management</div>
+                <div class="topic-tools">Tools: JFrog Artifactory, GitHub Packages, Nexus</div>
+                <div class="depth-bar" style="--depth-color:#185FA5"><div class="depth-pip on"></div><div class="depth-pip"></div><div class="depth-pip"></div><span class="depth-label">Awareness</span></div>
+                <div class="topic-note">Store build artifacts, container images, Helm charts. Learn promotion across environments.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Secrets management basics</div>
+                <div class="topic-tools">Tools: HashiCorp Vault, AWS Secrets Manager</div>
+                <div class="depth-bar" style="--depth-color:#185FA5"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Never hardcode secrets. Understand dynamic secrets, rotation, and env injection patterns.</div>
+              </div>
+            </div>
+            <div class="phase-footer">
+              <span>Milestone: Can containerize an app, write a full CI/CD pipeline, and provision cloud infra with Terraform.</span>
+              <span>Resources: Docker docs, Terraform docs, GitHub Actions docs, KodeKloud labs.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-header" onclick="togglePhase(this)">
+            <span class="phase-badge" style="background:#EEEDFE;color:#534AB7">Phase 3</span>
+            <span class="phase-title">Kubernetes, Cloud-Native and Observability</span>
+            <span class="phase-meta">Months 9 to 14 · ~500 hrs</span>
+            <span class="chevron">▶</span>
+          </div>
+          <div class="phase-body">
+            <div class="prereq-block">
+              <div class="prereq-title">Prerequisites for Phase 3</div>
+              <div class="prereq-grid">
+                <div class="prereq-item">
+                  <div class="prereq-label">Docker internals</div>
+                  <div class="prereq-why">Namespaces, cgroups, image layers, and container networking are core to k8s.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://www.youtube.com/watch?v=8fi7uSYlOdc" target="_blank" rel="noreferrer">Docker networking deep dive</a></li>
+                  </ul>
+                </div>
+                <div class="prereq-item">
+                  <div class="prereq-label">Networking fundamentals</div>
+                  <div class="prereq-why">CIDR, DNS, load balancers, and NAT are essential for Services and Ingress.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://www.youtube.com/watch?v=qiQR5rTSshw" target="_blank" rel="noreferrer">Networking full course</a></li>
+                  </ul>
+                </div>
+                <div class="prereq-item">
+                  <div class="prereq-label">YAML at expert level</div>
+                  <div class="prereq-why">Every k8s resource is YAML; indentation errors change meaning.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://yaml.org/spec/1.2-old/spec.html" target="_blank" rel="noreferrer">YAML spec (edge cases)</a></li>
+                  </ul>
+                </div>
+                <div class="prereq-item">
+                  <div class="prereq-label">Linux system calls and signals</div>
+                  <div class="prereq-why">SIGTERM handling, PID 1 behavior, and liveness probes rely on Linux process knowledge.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://www.man7.org/linux/man-pages/man7/signal.7.html" target="_blank" rel="noreferrer">signal(7) man page</a></li>
+                  </ul>
+                </div>
+                <div class="prereq-item">
+                  <div class="prereq-label">Observability mindset</div>
+                  <div class="prereq-why">Know what metrics, time series, cardinality, and alerts mean conceptually.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://www.robustperception.io/blog" target="_blank" rel="noreferrer">Robust Perception blog</a></li>
+                  </ul>
+                </div>
+                <div class="prereq-item">
+                  <div class="prereq-label">Terraform from Phase 2</div>
+                  <div class="prereq-why">Managed k8s clusters are provisioned with IaC, not console clicks.</div>
+                  <ul class="prereq-links">
+                    <li><a href="https://developer.hashicorp.com/terraform/tutorials/kubernetes" target="_blank" rel="noreferrer">Terraform + k8s tutorials</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-name">Kubernetes (k8s)</div>
+                <div class="topic-tools">Tools: k8s, kubectl, Helm, k3s or minikube</div>
+                <div class="depth-bar" style="--depth-color:#534AB7"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">Pods, Deployments, Services, Ingress, ConfigMaps, RBAC, PVs, HPA, rolling updates.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Helm and k8s packaging</div>
+                <div class="topic-tools">Tools: Helm 3, Kustomize</div>
+                <div class="depth-bar" style="--depth-color:#534AB7"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">Write and publish charts, manage values files, understand dependencies and rollbacks.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Deep cloud (AWS focus)</div>
+                <div class="topic-tools">Tools: EKS, RDS, VPC, ALB, Route53, IAM</div>
+                <div class="depth-bar" style="--depth-color:#534AB7"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">Go deep on one provider. Add GCP or Azure awareness.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Observability — metrics</div>
+                <div class="topic-tools">Tools: Prometheus, Grafana, Thanos</div>
+                <div class="depth-bar" style="--depth-color:#534AB7"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">PromQL, scrape configs, alerting rules, Grafana dashboards. RED and USE methods.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Observability — logs and traces</div>
+                <div class="topic-tools">Tools: ELK or Loki, Jaeger, OpenTelemetry</div>
+                <div class="depth-bar" style="--depth-color:#534AB7"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Structured logging, log aggregation, distributed tracing. OpenTelemetry is a unifying standard.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">GitOps</div>
+                <div class="topic-tools">Tools: ArgoCD, Flux</div>
+                <div class="depth-bar" style="--depth-color:#534AB7"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Git as single source of truth for cluster state. Sync policies, image updater, notifications.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Service mesh</div>
+                <div class="topic-tools">Tools: Istio, Linkerd (awareness)</div>
+                <div class="depth-bar" style="--depth-color:#534AB7"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">mTLS, traffic management, canary deployments, circuit breaking. Understand sidecar model.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Databases and storage operations</div>
+                <div class="topic-tools">Tools: PostgreSQL, Redis, Kafka</div>
+                <div class="depth-bar" style="--depth-color:#534AB7"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Know backups, replication, connection pooling, and when to use managed services.</div>
+              </div>
+            </div>
+            <div class="phase-footer">
+              <span>Milestone: Run a production-grade k8s cluster on EKS with full observability, GitOps deployments, and Helm-managed apps.</span>
+              <span>Resources: CKAD or CKA prep, AWS SAA, KodeKloud, Grafana labs.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-header" onclick="togglePhase(this)">
+            <span class="phase-badge" style="background:#FAEEDA;color:#854F0B">Phase 4</span>
+            <span class="phase-title">Security, Reliability and Platform Engineering</span>
+            <span class="phase-meta">Months 14 to 19 · ~450 hrs</span>
+            <span class="chevron">▶</span>
+          </div>
+          <div class="phase-body">
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-name">DevSecOps and supply chain security</div>
+                <div class="topic-tools">Tools: Trivy, Snyk, OPA, Cosign, SAST</div>
+                <div class="depth-bar" style="--depth-color:#854F0B"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">Shift security left: image scanning, SBOM, admission controllers, policy-as-code, signed images.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">SRE practices and SLOs</div>
+                <div class="topic-tools">Tools: PagerDuty, Opsgenie, SLO tooling</div>
+                <div class="depth-bar" style="--depth-color:#854F0B"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">SLIs, SLOs, error budgets, toil reduction, incident management, postmortems.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Chaos engineering</div>
+                <div class="topic-tools">Tools: Chaos Monkey, LitmusChaos, k6</div>
+                <div class="depth-bar" style="--depth-color:#854F0B"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Proactively test failure modes. Game days, blast radius planning, load testing.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Platform engineering and IDP</div>
+                <div class="topic-tools">Tools: Backstage, Port, Crossplane</div>
+                <div class="depth-bar" style="--depth-color:#854F0B"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Building internal developer platforms: self-service infra, golden paths, software catalogs.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Advanced networking</div>
+                <div class="topic-tools">Tools: Cilium, Calico, eBPF, BGP</div>
+                <div class="depth-bar" style="--depth-color:#854F0B"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">CNI plugins, eBPF networking, multi-cluster networking, network policies.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Cost optimization (FinOps)</div>
+                <div class="topic-tools">Tools: AWS Cost Explorer, Kubecost, CAST AI</div>
+                <div class="depth-bar" style="--depth-color:#854F0B"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Right-sizing, spot instances, reserved capacity, tuning resource requests and limits.</div>
+              </div>
+            </div>
+            <div class="phase-footer">
+              <span>Milestone: Can design and operate a secure, reliable platform with SLOs and policy-as-code at scale.</span>
+              <span>Resources: Google SRE book, CKS cert, CNCF security whitepapers.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-header" onclick="togglePhase(this)">
+            <span class="phase-badge" style="background:#FAECE7;color:#993C1D">Phase 5</span>
+            <span class="phase-title">Senior Skills — Architecture, Multi-Cloud and Leadership</span>
+            <span class="phase-meta">Months 19 to 24 · ~400 hrs</span>
+            <span class="chevron">▶</span>
+          </div>
+          <div class="phase-body">
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-name">Multi-cluster and multi-cloud</div>
+                <div class="topic-tools">Tools: Karmada, Cluster API, Terraform multi-provider</div>
+                <div class="depth-bar" style="--depth-color:#993C1D"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">Federation, workload placement, disaster recovery across regions or clouds.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Developer experience (DX) design</div>
+                <div class="topic-tools">Tools: Backstage, custom CLIs, Copilot for DevOps</div>
+                <div class="depth-bar" style="--depth-color:#993C1D"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">Reduce developer friction. Build golden paths, opinionated templates, automated onboarding.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Architecture and system design</div>
+                <div class="topic-tools">Tools: —</div>
+                <div class="depth-bar" style="--depth-color:#993C1D"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">Design for scale: cell-based architecture, event-driven systems, microservices trade-offs.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Serverless and edge</div>
+                <div class="topic-tools">Tools: AWS Lambda, Cloudflare Workers, Knative</div>
+                <div class="depth-bar" style="--depth-color:#993C1D"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">Know when containers are not the answer. Cold start, event-driven compute, edge caching.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">AI and ML infrastructure</div>
+                <div class="topic-tools">Tools: Ray, KubeFlow, NVIDIA GPU Operator, MLflow</div>
+                <div class="depth-bar" style="--depth-color:#993C1D"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip"></div><span class="depth-label">Working</span></div>
+                <div class="topic-note">GPU scheduling, model serving infra, MLOps pipelines. High-leverage skill for founders.</div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-name">Technical leadership</div>
+                <div class="topic-tools">Tools: —</div>
+                <div class="depth-bar" style="--depth-color:#993C1D"><div class="depth-pip on"></div><div class="depth-pip on"></div><div class="depth-pip on"></div><span class="depth-label">Deep</span></div>
+                <div class="topic-note">RFCs, ADRs, runbooks, on-call culture, interviewing, roadmap planning.</div>
+              </div>
+            </div>
+            <div class="phase-footer">
+              <span>Milestone: Can architect a full platform, lead a team, and run a startup's infra.</span>
+              <span>Resources: Designing Distributed Systems, CNCF landscape, system design interviews.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section tab-panel" id="tab-resources">
+      <h2>Resources and Projects</h2>
+      <p>Use the resource list to plan study sessions and the projects list to track hands-on work.</p>
+
+      <div class="resources">
+        <div class="container">
+          <h2 class="sr-only">DevOps learning roadmap: resources and projects for each phase</h2>
+
+          <div class="phase-tabs">
+            <button class="phase-tab active" onclick="switchPhase(0)">Phase 0 · Before you start</button>
+            <button class="phase-tab" onclick="switchPhase(1)">Phase 1 · Foundations</button>
+            <button class="phase-tab" onclick="switchPhase(2)">Phase 2 · CI/CD and IaC</button>
+            <button class="phase-tab" onclick="switchPhase(3)">Phase 3 · Kubernetes</button>
+            <button class="phase-tab" onclick="switchPhase(4)">Phase 4 · Security and SRE</button>
+            <button class="phase-tab" onclick="switchPhase(5)">Phase 5 · Senior and Leadership</button>
+          </div>
+
+          <!-- Resources: Phase 0 -->
+          <div id="phase-0" class="phase-content active">
+            <div class="phase-header">
+              <div style="font-size: 15px; font-weight: 600; color: var(--ink-1);">Phase 0 — Before you start: the hidden prerequisites</div>
+              <div class="phase-meta">Not in the roadmap, but essential to get through Phase 1 without confusion</div>
+            </div>
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">How computers and OS work</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Why it matters</div>
+                  <p style="font-size:12px;color:var(--ink-3);line-height:1.5;margin-bottom:6px">Without knowing what a process, thread, file descriptor, or system call is, Linux commands feel like magic spells you cannot debug.</p>
+                </div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=26QPDBe-NB8" target="_blank" rel="noreferrer">How computers work – Crash Course CS</a></li>
+                    <li><a href="https://www.youtube.com/playlist?list=PLBlnK6fEyqRiVhbXDGLXDk_OQAeuVcp2O" target="_blank" rel="noreferrer">Operating Systems – Neso Academy</a></li>
+                    <li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/" target="_blank" rel="noreferrer">Operating Systems: Three Easy Pieces</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Basic programming (any language)</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Why it matters</div>
+                  <p style="font-size:12px;color:var(--ink-3);line-height:1.5;margin-bottom:6px">Bash scripting, Python automation, and Terraform configs all require you to think in conditionals, loops, and functions.</p>
+                </div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=kqtD5dpn9C8" target="_blank" rel="noreferrer">Python for Beginners – Programming with Mosh</a></li>
+                    <li><a href="https://cs50.harvard.edu/python/2022/" target="_blank" rel="noreferrer">CS50P – Harvard Python</a></li>
+                    <li><a href="https://automatetheboringstuff.com/" target="_blank" rel="noreferrer">Automate the Boring Stuff (free book)</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">How the web works (HTTP basics)</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Why it matters</div>
+                  <p style="font-size:12px;color:var(--ink-3);line-height:1.5;margin-bottom:6px">Docker exposes ports, Nginx proxies requests, and load balancers route traffic — none of this makes sense without HTTP, TCP, and DNS basics.</p>
+                </div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=7_LPdttKXPc" target="_blank" rel="noreferrer">How the internet works – freeCodeCamp</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview" target="_blank" rel="noreferrer">HTTP overview – MDN</a></li>
+                    <li><a href="https://www.cloudflare.com/learning/dns/what-is-dns/" target="_blank" rel="noreferrer">What is DNS – Cloudflare</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Text editor and terminal comfort</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Why it matters</div>
+                  <p style="font-size:12px;color:var(--ink-3);line-height:1.5;margin-bottom:6px">You will live in the terminal. Fumbling with editors or directory navigation slows every exercise.</p>
+                </div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=RZ4p-saaQkc" target="_blank" rel="noreferrer">Vim basics in 8 minutes</a></li>
+                    <li><a href="https://www.openvim.com/" target="_blank" rel="noreferrer">OpenVim – interactive tutorial</a></li>
+                    <li><a href="https://code.visualstudio.com/docs/introvideos/basics" target="_blank" rel="noreferrer">VS Code basics (official)</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">YAML and JSON fluency</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Why it matters</div>
+                  <p style="font-size:12px;color:var(--ink-3);line-height:1.5;margin-bottom:6px">Kubernetes manifests, CI/CD pipelines, and IaC are YAML or JSON. Indentation mistakes are costly.</p>
+                </div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=1uFVr15xDGg" target="_blank" rel="noreferrer">YAML Tutorial – TechWorld with Nana</a></li>
+                    <li><a href="https://learnxinyminutes.com/docs/yaml/" target="_blank" rel="noreferrer">Learn YAML in Y minutes</a></li>
+                    <li><a href="https://jsonformatter.org/yaml-validator" target="_blank" rel="noreferrer">YAML validator</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Basic SQL and databases</span><span class="depth-badge depth-awareness">Awareness</span></div>
+                <div class="resource-section"><div class="resource-label">Why it matters</div>
+                  <p style="font-size:12px;color:var(--ink-3);line-height:1.5;margin-bottom:6px">From Phase 3 onward you will manage Postgres, Redis, and Kafka. Know what queries and schemas are.</p>
+                </div>
+                <div class="resource-section"><div class="resource-label">Resources</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=HXV3zeQKqGY" target="_blank" rel="noreferrer">SQL Tutorial – freeCodeCamp</a></li>
+                    <li><a href="https://sqlzoo.net/" target="_blank" rel="noreferrer">SQLZoo – interactive practice</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="projects-section">
+              <div class="projects-header">Starter exercises before Phase 1</div>
+              <div class="project-list">
+                <div class="project-item"><span class="project-num">E1</span><div class="project-body"><div class="project-name">Build and deploy a tiny Python web app locally</div><div class="project-desc">Write a 20-line Flask app that returns "Hello World" on a port. Run it, visit it, change the port, restart.</div></div></div>
+                <div class="project-item"><span class="project-num">E2</span><div class="project-body"><div class="project-name">Write 10 YAML files from scratch</div><div class="project-desc">Draft configs for servers and workflows, validate with a linter, and fix intentional indentation errors.</div></div></div>
+                <div class="project-item"><span class="project-num">E3</span><div class="project-body"><div class="project-name">Set up a local Linux VM</div><div class="project-desc">Install Ubuntu on VirtualBox or WSL2, create users, install packages, and SSH in.</div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resources: Phase 1 -->
+          <div id="phase-1" class="phase-content">
+            <div class="phase-header">
+              <div style="font-size: 15px; font-weight: 600; color: var(--ink-1);">Phase 1 — Foundations: Linux, Networking and Git</div>
+              <div class="phase-meta">Months 0 to 4 · ~400 hrs · Awareness to Working knowledge</div>
+            </div>
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Linux and Bash</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=ROjZy1WbCIA" target="_blank" rel="noreferrer">The Linux Command Line Bootcamp – Colt Steele (Udemy)</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=ZtqBQ68cfJc" target="_blank" rel="noreferrer">Bash Scripting Full Course – freeCodeCamp (YouTube)</a></li>
+                    <li><a href="https://www.youtube.com/playlist?list=PLIhvC56v63IJIujb5cyE13oLuyORZpdkL" target="_blank" rel="noreferrer">Linux for Hackers – NetworkChuck (YouTube)</a></li>
+                  </ul>
+                </div>
+                <div class="resource-section"><div class="resource-label">Docs and Reading</div>
+                  <ul class="resource-list">
+                    <li><a href="https://linuxcommand.org/tlcl.php" target="_blank" rel="noreferrer">The Linux Command Line (free book)</a></li>
+                    <li><a href="https://www.man7.org/linux/man-pages/" target="_blank" rel="noreferrer">Linux man-pages online</a></li>
+                    <li><a href="https://overthewire.org/wargames/bandit/" target="_blank" rel="noreferrer">OverTheWire: Bandit (hands-on Linux wargame)</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Git and Version Control</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=RGOj5yH7evk" target="_blank" rel="noreferrer">Git and GitHub Crash Course – freeCodeCamp (YouTube)</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=Uszj_k0DGsg" target="_blank" rel="noreferrer">Git for Professionals – freeCodeCamp (YouTube)</a></li>
+                  </ul>
+                </div>
+                <div class="resource-section"><div class="resource-label">Interactive and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://learngitbranching.js.org/" target="_blank" rel="noreferrer">Learn Git Branching (interactive)</a></li>
+                    <li><a href="https://git-scm.com/book/en/v2" target="_blank" rel="noreferrer">Pro Git Book (official, free)</a></li>
+                    <li><a href="https://docs.github.com/en/get-started" target="_blank" rel="noreferrer">GitHub Getting Started Docs</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Networking basics</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=qiQR5rTSshw" target="_blank" rel="noreferrer">Computer Networking Full Course – freeCodeCamp</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=IPvYjXCsTg8" target="_blank" rel="noreferrer">Networking for DevOps – TechWorld with Nana</a></li>
+                  </ul>
+                </div>
+                <div class="resource-section"><div class="resource-label">Docs and Reading</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.cloudflare.com/learning/" target="_blank" rel="noreferrer">Cloudflare Learning Center (DNS, HTTP, TLS)</a></li>
+                    <li><a href="https://www.practicalnetworking.net/" target="_blank" rel="noreferrer">Practical Networking</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Scripting (Python or Go)</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank" rel="noreferrer">Python Full Course – freeCodeCamp</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=un6ZyFkqFKo" target="_blank" rel="noreferrer">Automate with Python – freeCodeCamp</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=yyUHQIec83I" target="_blank" rel="noreferrer">Go or Golang Tutorial – TechWorld with Nana</a></li>
+                  </ul>
+                </div>
+                <div class="resource-section"><div class="resource-label">Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://docs.python.org/3/tutorial/" target="_blank" rel="noreferrer">Official Python Tutorial</a></li>
+                    <li><a href="https://go.dev/tour/welcome/1" target="_blank" rel="noreferrer">A Tour of Go (official)</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Cloud Fundamentals (AWS)</span><span class="depth-badge depth-awareness">Awareness</span></div>
+                <div class="resource-section"><div class="resource-label">Video</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=k1RI5locZE4" target="_blank" rel="noreferrer">AWS Certified Cloud Practitioner – freeCodeCamp</a></li>
+                    <li><a href="https://www.youtube.com/c/BeABetterDev" target="_blank" rel="noreferrer">Be A Better Dev – AWS deep dives</a></li>
+                  </ul>
+                </div>
+                <div class="resource-section"><div class="resource-label">Docs and Labs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://aws.amazon.com/training/digital/aws-cloud-practitioner-essentials/" target="_blank" rel="noreferrer">AWS Cloud Practitioner Essentials (free)</a></li>
+                    <li><a href="https://aws.amazon.com/free/" target="_blank" rel="noreferrer">AWS Free Tier – hands-on practice</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">How software is built and deployed</span><span class="depth-badge depth-awareness">Awareness</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Reading</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=0101UjVCpW0" target="_blank" rel="noreferrer">DevOps in 5 mins – TechWorld with Nana</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=Wvf0mBNGjXY" target="_blank" rel="noreferrer">SDLC explained – Fireship</a></li>
+                    <li><a href="https://maven.apache.org/guides/getting-started/" target="_blank" rel="noreferrer">Maven Getting Started (official docs)</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="projects-section">
+              <div class="projects-header">Hands-on projects for Phase 1</div>
+              <div class="project-list">
+                <div class="project-item"><span class="project-num">P1</span><div class="project-body"><div class="project-name">Automated server setup script</div><div class="project-desc">Write a Bash script that provisions a fresh Ubuntu VM: installs packages, creates users, sets up firewall rules (ufw), and configures SSH key-only auth. Run it on a free-tier EC2 instance.</div></div></div>
+                <div class="project-item"><span class="project-num">P2</span><div class="project-body"><div class="project-name">Git branching strategy simulation</div><div class="project-desc">Create a mini app repo, implement GitFlow with feature branches, PRs, tags, and a mono-repo layout. Practice rebase, cherry-pick, and merge conflict resolution deliberately.</div></div></div>
+                <div class="project-item"><span class="project-num">P3</span><div class="project-body"><div class="project-name">Network packet inspector</div><div class="project-desc">Use Wireshark and tcpdump to capture HTTP vs HTTPS traffic, DNS queries, and a TCP handshake. Document what you observe; explain each layer. Bonus: run a local DNS server (dnsmasq).</div></div></div>
+                <div class="project-item"><span class="project-num">P4</span><div class="project-body"><div class="project-name">Python log analyzer</div><div class="project-desc">Parse nginx or Apache access logs with Python, extract top IPs, status codes, and request rates. Output a summary report. Schedule via cron.</div></div></div>
+                <div class="project-item"><span class="project-num">P5</span><div class="project-body"><div class="project-name">Static website on AWS S3 and CloudFront</div><div class="project-desc">Host a static site on S3, front it with CloudFront (HTTPS), set up a custom domain with Route 53. Connects cloud fundamentals with real deployment concepts.</div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resources: Phase 2 -->
+          <div id="phase-2" class="phase-content">
+            <div class="phase-header">
+              <div style="font-size: 15px; font-weight: 600; color: var(--ink-1);">Phase 2 — Containers, CI/CD and Infrastructure as Code</div>
+              <div class="phase-meta">Months 4 to 9 · ~500 hrs · Working to Deep expertise</div>
+            </div>
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Docker</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=pg19Z8LL06w" target="_blank" rel="noreferrer">Docker Tutorial for Beginners – TechWorld with Nana</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=3c-iBn73dDE" target="_blank" rel="noreferrer">Docker Full Course – TechWorld with Nana</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=fqMOX6JJhGo" target="_blank" rel="noreferrer">Docker for Beginners – freeCodeCamp</a></li>
+                  </ul>
+                </div>
+                <div class="resource-section"><div class="resource-label">Docs and Labs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://docs.docker.com/get-started/" target="_blank" rel="noreferrer">Official Docker Get Started</a></li>
+                    <li><a href="https://labs.play-with-docker.com/" target="_blank" rel="noreferrer">Play with Docker (free browser lab)</a></li>
+                    <li><a href="https://dockerlabs.collabnix.com/" target="_blank" rel="noreferrer">Docker Labs – Collabnix</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">CI/CD pipelines (GitHub Actions or GitLab)</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=R8_veQiYBjI" target="_blank" rel="noreferrer">GitHub Actions Full Course – TechWorld with Nana</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=qP8kir2GUgo" target="_blank" rel="noreferrer">GitLab CI/CD Tutorial – TechWorld with Nana</a></li>
+                  </ul>
+                </div>
+                <div class="resource-section"><div class="resource-label">Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://docs.github.com/en/actions" target="_blank" rel="noreferrer">GitHub Actions official docs</a></li>
+                    <li><a href="https://docs.gitlab.com/ee/ci/" target="_blank" rel="noreferrer">GitLab CI/CD official docs</a></li>
+                    <li><a href="https://www.jenkins.io/doc/tutorials/" target="_blank" rel="noreferrer">Jenkins official tutorials</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Terraform (IaC)</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=SLB_c_ayRMo" target="_blank" rel="noreferrer">Terraform Full Course – freeCodeCamp</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=l5k1ai_GBDE" target="_blank" rel="noreferrer">Terraform Tutorial – TechWorld with Nana</a></li>
+                  </ul>
+                </div>
+                <div class="resource-section"><div class="resource-label">Docs and Labs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://developer.hashicorp.com/terraform/tutorials" target="_blank" rel="noreferrer">HashiCorp official tutorials</a></li>
+                    <li><a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs" target="_blank" rel="noreferrer">Terraform AWS provider docs</a></li>
+                    <li><a href="https://github.com/antonbabenko/terraform-best-practices" target="_blank" rel="noreferrer">Terraform best practices (GitHub)</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Ansible (Configuration management)</span><span class="depth-badge depth-awareness">Awareness</span></div>
+                <div class="resource-section"><div class="resource-label">Video</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=1id6ERvfozo" target="_blank" rel="noreferrer">Ansible Full Course – freeCodeCamp</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=sf7NMgRJkPM" target="_blank" rel="noreferrer">Ansible Tutorial – TechWorld with Nana</a></li>
+                  </ul>
+                </div>
+                <div class="resource-section"><div class="resource-label">Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://docs.ansible.com/ansible/latest/getting_started/index.html" target="_blank" rel="noreferrer">Ansible Getting Started (official)</a></li>
+                    <li><a href="https://galaxy.ansible.com/" target="_blank" rel="noreferrer">Ansible Galaxy (community roles)</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Artifact and package management</span><span class="depth-badge depth-awareness">Awareness</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=8RoNMMczSNo" target="_blank" rel="noreferrer">JFrog Artifactory intro – JFrog YouTube</a></li>
+                    <li><a href="https://helm.sh/docs/" target="_blank" rel="noreferrer">Helm docs (also covered in Phase 3)</a></li>
+                    <li><a href="https://docs.sonatype.com/display/OSSRH" target="_blank" rel="noreferrer">Nexus Repository docs</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Secrets management</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=Dz6hpGzSAus" target="_blank" rel="noreferrer">HashiCorp Vault Tutorial – TechWorld with Nana</a></li>
+                    <li><a href="https://developer.hashicorp.com/vault/tutorials" target="_blank" rel="noreferrer">Vault official tutorials</a></li>
+                    <li><a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html" target="_blank" rel="noreferrer">AWS Secrets Manager docs</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="projects-section">
+              <div class="projects-header">Hands-on projects for Phase 2</div>
+              <div class="project-list">
+                <div class="project-item"><span class="project-num">P1</span><div class="project-body"><div class="project-name">Dockerise a multi-service app</div><div class="project-desc">Take a Node.js or Python app with a Postgres DB and Redis cache. Write Dockerfiles, compose them with docker-compose, optimize image size, set up health checks and restart policies.</div></div></div>
+                <div class="project-item"><span class="project-num">P2</span><div class="project-body"><div class="project-name">Full CI/CD pipeline with GitHub Actions</div><div class="project-desc">Build a pipeline that lints, runs tests, builds a Docker image, pushes to ECR or Docker Hub, and deploys to an EC2 or ECS instance — with environment-based secrets.</div></div></div>
+                <div class="project-item"><span class="project-num">P3</span><div class="project-body"><div class="project-name">Terraform AWS infrastructure</div><div class="project-desc">Provision a full VPC: subnets, security groups, EC2 instances behind an ALB, RDS in a private subnet, and an S3 bucket. Use modules and remote state (S3 + DynamoDB lock).</div></div></div>
+                <div class="project-item"><span class="project-num">P4</span><div class="project-body"><div class="project-name">Ansible server hardening playbook</div><div class="project-desc">Write an Ansible playbook that hardens multiple EC2 instances: disables root login, configures fail2ban, updates packages, deploys an Nginx config from a template, and manages users idempotently.</div></div></div>
+                <div class="project-item"><span class="project-num">P5</span><div class="project-body"><div class="project-name">Approval-gated staging to production pipeline</div><div class="project-desc">Extend the CI/CD pipeline with a manual approval gate between staging and production. Add automated smoke tests post-deploy and Slack notifications on success or failure.</div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resources: Phase 3 -->
+          <div id="phase-3" class="phase-content">
+            <div class="phase-header">
+              <div style="font-size: 15px; font-weight: 600; color: var(--ink-1);">Phase 3 — Kubernetes, Cloud-Native and Observability</div>
+              <div class="phase-meta">Months 9 to 14 · ~500 hrs · Working to Deep expertise</div>
+            </div>
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Kubernetes</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=X48VuDVv0do" target="_blank" rel="noreferrer">Kubernetes Full Course – TechWorld with Nana</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=s_o8dwzRlu4" target="_blank" rel="noreferrer">Kubernetes Crash Course – freeCodeCamp</a></li>
+                    <li><a href="https://www.youtube.com/c/DevOpsToolkit" target="_blank" rel="noreferrer">DevOps Toolkit – Viktor Farcic (advanced K8s)</a></li>
+                  </ul>
+                </div>
+                <div class="resource-section"><div class="resource-label">Docs and Labs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://kubernetes.io/docs/tutorials/" target="_blank" rel="noreferrer">Official Kubernetes tutorials</a></li>
+                    <li><a href="https://killer.sh/" target="_blank" rel="noreferrer">Killer.sh – CKA or CKAD exam simulator</a></li>
+                    <li><a href="https://kodekloud.com/courses/certified-kubernetes-administrator-cka/" target="_blank" rel="noreferrer">KodeKloud CKA course</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Helm and packaging</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=-ykwb1d0HxI" target="_blank" rel="noreferrer">Helm Tutorial – TechWorld with Nana</a></li>
+                    <li><a href="https://helm.sh/docs/chart_template_guide/" target="_blank" rel="noreferrer">Helm chart template guide (official)</a></li>
+                    <li><a href="https://artifacthub.io/" target="_blank" rel="noreferrer">Artifact Hub – browse community charts</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Cloud AWS deep (EKS, RDS, VPC, ALB)</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=ppkYR9CeghE" target="_blank" rel="noreferrer">AWS EKS Tutorial – TechWorld with Nana</a></li>
+                    <li><a href="https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html" target="_blank" rel="noreferrer">AWS EKS official getting started</a></li>
+                    <li><a href="https://www.eksworkshop.com/" target="_blank" rel="noreferrer">EKS Workshop (free, comprehensive)</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Observability — Prometheus, Grafana, Thanos</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=QoDqxm7ybLc" target="_blank" rel="noreferrer">Prometheus and Grafana Tutorial – TechWorld with Nana</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=h4Sl21AKiDg" target="_blank" rel="noreferrer">Grafana for Beginners – Grafana YouTube</a></li>
+                  </ul>
+                </div>
+                <div class="resource-section"><div class="resource-label">Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://prometheus.io/docs/introduction/overview/" target="_blank" rel="noreferrer">Prometheus official docs</a></li>
+                    <li><a href="https://grafana.com/tutorials/" target="_blank" rel="noreferrer">Grafana official tutorials</a></li>
+                    <li><a href="https://thanos.io/tip/thanos/quick-tutorial.md/" target="_blank" rel="noreferrer">Thanos quick tutorial</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Logging — ELK, Loki, OpenTelemetry</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=gS97m6NkJ8k" target="_blank" rel="noreferrer">ELK Stack Tutorial – freeCodeCamp</a></li>
+                    <li><a href="https://grafana.com/docs/loki/latest/get-started/" target="_blank" rel="noreferrer">Grafana Loki getting started</a></li>
+                    <li><a href="https://opentelemetry.io/docs/getting-started/" target="_blank" rel="noreferrer">OpenTelemetry getting started (official)</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">GitOps — ArgoCD or Flux</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=MeU5_k9ssrs" target="_blank" rel="noreferrer">ArgoCD Tutorial – TechWorld with Nana</a></li>
+                    <li><a href="https://argo-cd.readthedocs.io/en/stable/getting_started/" target="_blank" rel="noreferrer">ArgoCD official getting started</a></li>
+                    <li><a href="https://fluxcd.io/flux/get-started/" target="_blank" rel="noreferrer">FluxCD get started</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Service mesh — Istio or Linkerd</span><span class="depth-badge depth-awareness">Awareness</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=16fgzklcF7Y" target="_blank" rel="noreferrer">Istio Service Mesh – TechWorld with Nana</a></li>
+                    <li><a href="https://istio.io/latest/docs/setup/getting-started/" target="_blank" rel="noreferrer">Istio getting started (official)</a></li>
+                    <li><a href="https://linkerd.io/2.14/getting-started/" target="_blank" rel="noreferrer">Linkerd getting started</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Databases — PostgreSQL, Redis, Kafka</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=qw--VYLpxG4" target="_blank" rel="noreferrer">PostgreSQL Tutorial – freeCodeCamp</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=Jgpz9kMfovs" target="_blank" rel="noreferrer">Apache Kafka Tutorial – TechWorld with Nana</a></li>
+                    <li><a href="https://redis.io/learn" target="_blank" rel="noreferrer">Redis University (free courses)</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="projects-section">
+              <div class="projects-header">Hands-on projects for Phase 3</div>
+              <div class="project-list">
+                <div class="project-item"><span class="project-num">P1</span><div class="project-body"><div class="project-name">Production-grade EKS cluster with Terraform</div><div class="project-desc">Provision an EKS cluster via Terraform with managed node groups, autoscaling, IRSA for pod permissions, and an ALB Ingress controller. Deploy a real app with multiple services across namespaces.</div></div></div>
+                <div class="project-item"><span class="project-num">P2</span><div class="project-body"><div class="project-name">Full observability stack on Kubernetes</div><div class="project-desc">Install Prometheus and Grafana via Helm, instrument your app to expose custom metrics, build dashboards showing RED method. Set up Alertmanager to fire Slack alerts.</div></div></div>
+                <div class="project-item"><span class="project-num">P3</span><div class="project-body"><div class="project-name">GitOps deployment with ArgoCD</div><div class="project-desc">Set up ArgoCD in your cluster. Manage all app deployments declaratively from a Git repo. Implement multi-environment promotion using Kustomize overlays or Helm values.</div></div></div>
+                <div class="project-item"><span class="project-num">P4</span><div class="project-body"><div class="project-name">Custom Helm chart for a microservices app</div><div class="project-desc">Package a 3-service app into a single Helm chart with configurable values, health probes, HPA, and PodDisruptionBudgets. Publish to a private chart repository.</div></div></div>
+                <div class="project-item"><span class="project-num">P5</span><div class="project-body"><div class="project-name">Kafka event streaming pipeline</div><div class="project-desc">Build a producer to Kafka to consumer pipeline on K8s using Strimzi operator. Route events through topics, implement dead-letter queue, and monitor consumer lag with Prometheus.</div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resources: Phase 4 -->
+          <div id="phase-4" class="phase-content">
+            <div class="phase-header">
+              <div style="font-size: 15px; font-weight: 600; color: var(--ink-1);">Phase 4 — Security, Reliability and Platform Engineering</div>
+              <div class="phase-meta">Months 14 to 19 · ~450 hrs · Working to Deep expertise</div>
+            </div>
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">DevSecOps (Trivy, OPA, SAST, Cosign)</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=4GndFMr5Vds" target="_blank" rel="noreferrer">DevSecOps with GitHub Actions – TechWorld with Nana</a></li>
+                    <li><a href="https://aquasecurity.github.io/trivy/" target="_blank" rel="noreferrer">Trivy docs (container scanning)</a></li>
+                    <li><a href="https://www.openpolicyagent.org/docs/latest/" target="_blank" rel="noreferrer">OPA (Open Policy Agent) official docs</a></li>
+                    <li><a href="https://docs.sigstore.dev/cosign/overview/" target="_blank" rel="noreferrer">Cosign and Sigstore docs</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">SRE practices and SLOs</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Books</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=uTEL8Ff1Zvk" target="_blank" rel="noreferrer">SRE fundamentals – Google Cloud Tech</a></li>
+                    <li><a href="https://sre.google/sre-book/table-of-contents/" target="_blank" rel="noreferrer">Google SRE Book (free online)</a></li>
+                    <li><a href="https://sre.google/workbook/table-of-contents/" target="_blank" rel="noreferrer">Google SRE Workbook (free online)</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Chaos engineering (LitmusChaos, k6)</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=Ofn9VRSBDeg" target="_blank" rel="noreferrer">Chaos Engineering intro – CNCF</a></li>
+                    <li><a href="https://litmuschaos.github.io/litmus/docs/introduction/what-is-litmus" target="_blank" rel="noreferrer">LitmusChaos official docs</a></li>
+                    <li><a href="https://k6.io/docs/" target="_blank" rel="noreferrer">k6 load testing docs (Grafana)</a></li>
+                    <li><a href="https://principlesofchaos.org/" target="_blank" rel="noreferrer">Principles of Chaos Engineering</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Platform engineering and IDPs (Backstage, Crossplane)</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=US7eGYOj1Lo" target="_blank" rel="noreferrer">Backstage Developer Portal – Viktor Farcic</a></li>
+                    <li><a href="https://backstage.io/docs/getting-started/" target="_blank" rel="noreferrer">Backstage official getting started</a></li>
+                    <li><a href="https://www.crossplane.io/docs/" target="_blank" rel="noreferrer">Crossplane official docs</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Advanced networking (CNI, eBPF, BGP)</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=J29hTxP5Ajg" target="_blank" rel="noreferrer">eBPF explained – Liz Rice and CNCF</a></li>
+                    <li><a href="https://cilium.io/learn/technology/ebpf/" target="_blank" rel="noreferrer">Cilium and eBPF learning resources</a></li>
+                    <li><a href="https://docs.projectcalico.org/networking/bgp" target="_blank" rel="noreferrer">Calico BGP networking docs</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Cost optimization (FinOps)</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=xvM-OHVVrBk" target="_blank" rel="noreferrer">AWS Cost Optimization – Be a Better Dev</a></li>
+                    <li><a href="https://www.finops.org/introduction/what-is-finops/" target="_blank" rel="noreferrer">FinOps Foundation – official</a></li>
+                    <li><a href="https://kubecost.com/resources/" target="_blank" rel="noreferrer">Kubecost docs – K8s cost visibility</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="projects-section">
+              <div class="projects-header">Hands-on projects for Phase 4</div>
+              <div class="project-list">
+                <div class="project-item"><span class="project-num">P1</span><div class="project-body"><div class="project-name">Secure CI/CD pipeline with supply chain controls</div><div class="project-desc">Add Trivy container scanning, Checkov IaC scanning, OPA policy gates, and Cosign image signing to your CI pipeline. Block deployments that violate policy; produce an SBOM for each release.</div></div></div>
+                <div class="project-item"><span class="project-num">P2</span><div class="project-body"><div class="project-name">SLO dashboard with error budget alerts</div><div class="project-desc">Define SLIs and SLOs for an API. Build a Grafana dashboard tracking error budget burn rate. Wire Alertmanager to page on fast burn.</div></div></div>
+                <div class="project-item"><span class="project-num">P3</span><div class="project-body"><div class="project-name">Chaos experiment on a microservice</div><div class="project-desc">Run LitmusChaos experiments (pod kill, CPU hog, network latency) on a staging cluster. Document blast radius, observe how your app degrades, implement circuit breakers and retries.</div></div></div>
+                <div class="project-item"><span class="project-num">P4</span><div class="project-body"><div class="project-name">Internal developer platform (mini Backstage)</div><div class="project-desc">Deploy Backstage, register your services in the catalog, add TechDocs, and create a software template that scaffolds a new microservice repo with CI/CD pre-wired.</div></div></div>
+                <div class="project-item"><span class="project-num">P5</span><div class="project-body"><div class="project-name">Multi-account AWS cost governance</div><div class="project-desc">Deploy Kubecost and AWS Cost Explorer integration. Set up tagging policies enforced by OPA admission controller. Build a FinOps dashboard showing per-team spend and idle resource waste.</div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resources: Phase 5 -->
+          <div id="phase-5" class="phase-content">
+            <div class="phase-header">
+              <div style="font-size: 15px; font-weight: 600; color: var(--ink-1);">Phase 5 — Senior Skills: Architecture, Multi-Cloud and Leadership</div>
+              <div class="phase-meta">Months 19 to 24 · ~420 hrs · Deep expertise across all domains</div>
+            </div>
+            <div class="topic-grid">
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Multi-cluster and multi-cloud (Karmada, Anthos)</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://karmada.io/docs/get-started/" target="_blank" rel="noreferrer">Karmada getting started (official)</a></li>
+                    <li><a href="https://www.youtube.com/c/HashiCorp" target="_blank" rel="noreferrer">HashiCorp YouTube – multi-cloud Terraform</a></li>
+                    <li><a href="https://cloud.google.com/anthos/docs" target="_blank" rel="noreferrer">Google Anthos official docs</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Developer experience (DX design)</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Reading</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=HuEiLhBxbhE" target="_blank" rel="noreferrer">Developer Experience – CNCF YouTube</a></li>
+                    <li><a href="https://github.com/cli/cli" target="_blank" rel="noreferrer">GitHub CLI source – learn from great DX</a></li>
+                    <li><a href="https://increment.com/developer-experience/" target="_blank" rel="noreferrer">Increment Magazine – Developer Experience</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Architecture and system design at scale</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Books</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=Y-Gl4HEyeUQ" target="_blank" rel="noreferrer">System Design Interview Course – ByteByteGo</a></li>
+                    <li><a href="https://github.com/donnemartin/system-design-primer" target="_blank" rel="noreferrer">System Design Primer (GitHub, free)</a></li>
+                    <li><a href="https://www.oreilly.com/library/view/designing-distributed-systems/9781491983638/" target="_blank" rel="noreferrer">Designing Distributed Systems (O'Reilly)</a></li>
+                    <li><a href="https://www.cncf.io/reports/" target="_blank" rel="noreferrer">CNCF Annual Survey reports</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Serverless and edge (Lambda, Cloudflare Workers)</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=eOBq__h4OJ4" target="_blank" rel="noreferrer">AWS Lambda and Serverless – freeCodeCamp</a></li>
+                    <li><a href="https://developers.cloudflare.com/workers/" target="_blank" rel="noreferrer">Cloudflare Workers docs</a></li>
+                    <li><a href="https://www.serverless.com/learn/quick-start/" target="_blank" rel="noreferrer">Serverless Framework quick start</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">AI and ML infrastructure (Ray, MLflow, TFX)</span><span class="depth-badge depth-working">Working</span></div>
+                <div class="resource-section"><div class="resource-label">Video and Docs</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.youtube.com/watch?v=gItBoxAioEE" target="_blank" rel="noreferrer">MLOps fundamentals – freeCodeCamp</a></li>
+                    <li><a href="https://mlflow.org/docs/latest/index.html" target="_blank" rel="noreferrer">MLflow official docs</a></li>
+                    <li><a href="https://docs.ray.io/en/latest/index.html" target="_blank" rel="noreferrer">Ray documentation</a></li>
+                    <li><a href="https://www.tensorflow.org/tfx/guide" target="_blank" rel="noreferrer">TFX guide</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="topic-card">
+                <div class="topic-header"><span class="topic-title">Technical leadership and roadmapping</span><span class="depth-badge depth-deep">Deep</span></div>
+                <div class="resource-section"><div class="resource-label">Books and Talks</div>
+                  <ul class="resource-list">
+                    <li><a href="https://www.amazon.in/Staff-Engineer-Leadership-Beyond-Management/dp/1736417916" target="_blank" rel="noreferrer">Staff Engineer – Will Larson (book)</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=jNTBm_MBNtI" target="_blank" rel="noreferrer">Being a Staff Engineer – LeadDev talks</a></li>
+                    <li><a href="https://lethain.com/" target="_blank" rel="noreferrer">Lethain.com – Will Larson's engineering blog</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="projects-section">
+              <div class="projects-header">Hands-on projects for Phase 5</div>
+              <div class="project-list">
+                <div class="project-item"><span class="project-num">P1</span><div class="project-body"><div class="project-name">Multi-cluster federation with Karmada</div><div class="project-desc">Deploy the same workload across two EKS clusters in different AWS regions using Karmada. Implement policy-driven scheduling (latency vs cost). Simulate a cluster failure and verify workload migration.</div></div></div>
+                <div class="project-item"><span class="project-num">P2</span><div class="project-body"><div class="project-name">Build a golden path platform template</div><div class="project-desc">Design and document an opinionated template for new microservices: Helm chart scaffold, GitHub Actions CI, OPA policies, Prometheus exporters, and Backstage catalog entry.</div></div></div>
+                <div class="project-item"><span class="project-num">P3</span><div class="project-body"><div class="project-name">Serverless event-driven architecture</div><div class="project-desc">Build an async pipeline: S3 upload to Lambda trigger to SQS to Lambda processor to DynamoDB. Add CloudWatch alarms, dead-letter queues, and a Step Functions workflow.</div></div></div>
+                <div class="project-item"><span class="project-num">P4</span><div class="project-body"><div class="project-name">MLOps pipeline on Kubernetes</div><div class="project-desc">Deploy an ML model training pipeline using Ray and MLflow on K8s: data ingestion, distributed training, model registry, canary A/B serving with traffic splitting, and dashboards.</div></div></div>
+                <div class="project-item"><span class="project-num">P5</span><div class="project-body"><div class="project-name">Architecture decision record (ADR) and RFC process</div><div class="project-desc">Write three ADRs for real architectural decisions you made across your projects. Present one as an RFC to peers.</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const storageKey = "devops-tracker-v1";
+    const checkInPoints = 10;
+    const itemPoints = 5;
+
+    const badgeDefinitions = [
+      { id: "streak-3", label: "3-day streak", condition: state => state.streak >= 3 },
+      { id: "streak-7", label: "7-day streak", condition: state => state.streak >= 7 },
+      { id: "streak-14", label: "14-day streak", condition: state => state.streak >= 14 },
+      { id: "streak-30", label: "30-day streak", condition: state => state.streak >= 30 },
+      { id: "items-10", label: "10 items completed", condition: state => state.completedCount >= 10 },
+      { id: "items-50", label: "50 items completed", condition: state => state.completedCount >= 50 },
+      { id: "items-100", label: "100 items completed", condition: state => state.completedCount >= 100 }
+    ];
+
+    function loadState() {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) {
+        return { basePoints: 0, streak: 0, lastCheckIn: "", items: {} };
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        return { basePoints: 0, streak: 0, lastCheckIn: "", items: {}, ...parsed };
+      } catch (error) {
+        return { basePoints: 0, streak: 0, lastCheckIn: "", items: {} };
+      }
+    }
+
+    function saveState(state) {
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    }
+
+    function pad(num) {
+      return String(num).padStart(2, "0");
+    }
+
+    function formatDate(date) {
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    }
+
+    function getToday() {
+      return formatDate(new Date());
+    }
+
+    function getYesterday() {
+      const date = new Date();
+      date.setDate(date.getDate() - 1);
+      return formatDate(date);
+    }
+
+    function slugify(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    }
+
+    function applyTracking() {
+      const roadmapPhases = document.querySelectorAll(".roadmap .phase");
+      roadmapPhases.forEach((phase, index) => {
+        phase.dataset.phaseId = `roadmap-${index + 1}`;
+      });
+
+      const resourcePhases = document.querySelectorAll(".resources .phase-content");
+      resourcePhases.forEach((phase, index) => {
+        phase.dataset.phaseId = `resources-${index + 1}`;
+      });
+
+      const trackConfigs = [
+        { selector: ".roadmap .topic-card", labelSelector: ".topic-name", type: "topic" },
+        { selector: ".roadmap .prereq-item", labelSelector: ".prereq-label", type: "prereq" },
+        { selector: ".roadmap .project-item", labelSelector: ".project-name", type: "project" },
+        { selector: ".resources .resource-list li", labelSelector: "a", type: "resource" },
+        { selector: ".resources .project-item", labelSelector: ".project-name", type: "project" }
+      ];
+
+      trackConfigs.forEach(config => {
+        document.querySelectorAll(config.selector).forEach(item => {
+          if (item.querySelector(".trackline")) return;
+          const labelTarget = item.querySelector(config.labelSelector) || item;
+          const labelText = labelTarget.textContent.trim();
+          const phase = item.closest(".phase, .phase-content");
+          const phaseId = phase ? phase.dataset.phaseId || "general" : "general";
+          const id = `${config.type}-${phaseId}-${slugify(labelText)}`;
+
+          const trackline = document.createElement("label");
+          trackline.className = "trackline";
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.dataset.trackId = id;
+
+          const text = document.createElement("span");
+          text.className = "track-label";
+          text.textContent = "Mark complete";
+
+          trackline.append(checkbox, text);
+
+          if (config.type === "resource") {
+            item.prepend(trackline);
+          } else if (config.type === "project") {
+            item.prepend(trackline);
+          } else {
+            item.prepend(trackline);
+          }
+        });
+      });
+    }
+
+    function updateTracklineStyles() {
+      document.querySelectorAll(".trackline").forEach(line => {
+        const checkbox = line.querySelector("input");
+        if (!checkbox) return;
+        line.classList.toggle("done", checkbox.checked);
+      });
+    }
+
+    function calculateStats(state) {
+      const checkboxes = Array.from(document.querySelectorAll("input[data-track-id]"));
+      const total = checkboxes.length;
+      const completed = checkboxes.filter(box => box.checked).length;
+      const points = state.basePoints + completed * itemPoints;
+      return { total, completed, points };
+    }
+
+    function updateBadges(state, stats) {
+      const badgeRow = document.getElementById("badgeRow");
+      badgeRow.innerHTML = "";
+      const enrichedState = { ...state, completedCount: stats.completed };
+
+      badgeDefinitions.forEach(badge => {
+        const isEarned = badge.condition(enrichedState);
+        const badgeEl = document.createElement("div");
+        badgeEl.className = `badge${isEarned ? " earned" : ""}`;
+        badgeEl.textContent = isEarned ? `Earned: ${badge.label}` : `Locked: ${badge.label}`;
+        badgeRow.appendChild(badgeEl);
+      });
+
+      const nextBadge = badgeDefinitions.find(badge => !badge.condition(enrichedState));
+      const rewardValue = document.getElementById("rewardValue");
+      const rewardMeta = document.getElementById("rewardMeta");
+
+      if (nextBadge) {
+        rewardValue.textContent = nextBadge.label;
+        rewardMeta.textContent = "Keep going to unlock this badge.";
+      } else {
+        rewardValue.textContent = "All badges earned";
+        rewardMeta.textContent = "Legendary consistency.";
+      }
+    }
+
+    function render(state) {
+      const stats = calculateStats(state);
+      const progress = stats.total === 0 ? 0 : Math.round((stats.completed / stats.total) * 100);
+
+      document.getElementById("streakValue").textContent = `${state.streak} day${state.streak === 1 ? "" : "s"}`;
+      document.getElementById("streakMeta").textContent = state.lastCheckIn ? `Last check-in: ${state.lastCheckIn}` : "Start today to build momentum.";
+
+      document.getElementById("pointsValue").textContent = stats.points;
+      document.getElementById("levelValue").textContent = `Level ${Math.floor(stats.points / 100) + 1}`;
+
+      document.getElementById("completedValue").textContent = `${stats.completed} / ${stats.total}`;
+      document.getElementById("completedMeta").textContent = `${progress}% complete`;
+
+      document.getElementById("progressFill").style.width = `${progress}%`;
+
+      updateBadges(state, stats);
+
+      const checkInBtn = document.getElementById("checkInBtn");
+      checkInBtn.disabled = state.lastCheckIn === getToday();
+    }
+
+    function syncCheckboxes(state) {
+      document.querySelectorAll("input[data-track-id]").forEach(box => {
+        const id = box.dataset.trackId;
+        box.checked = Boolean(state.items[id]);
+      });
+      updateTracklineStyles();
+    }
+
+    function bindCheckboxEvents(state) {
+      document.querySelectorAll("input[data-track-id]").forEach(box => {
+        box.addEventListener("change", event => {
+          const id = event.target.dataset.trackId;
+          state.items[id] = event.target.checked;
+          saveState(state);
+          updateTracklineStyles();
+          render(state);
+        });
+      });
+    }
+
+    function togglePhase(header) {
+      const body = header.nextElementSibling;
+      const chevron = header.querySelector(".chevron");
+      const isOpen = body.classList.toggle("open");
+      chevron.style.transform = isOpen ? "rotate(90deg)" : "";
+    }
+
+    function switchPhase(idx) {
+      document.querySelectorAll(".resources .phase-content").forEach((el, i) => {
+        el.classList.toggle("active", i === idx);
+      });
+      document.querySelectorAll(".resources .phase-tab").forEach((el, i) => {
+        el.classList.toggle("active", i === idx);
+      });
+    }
+
+    function initTabs() {
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+          document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.remove("active"));
+          btn.classList.add("active");
+          document.getElementById(`tab-${btn.dataset.tab}`).classList.add("active");
+        });
+      });
+    }
+
+    function initCheckIn(state) {
+      const checkInBtn = document.getElementById("checkInBtn");
+      checkInBtn.addEventListener("click", () => {
+        const today = getToday();
+        if (state.lastCheckIn === today) return;
+
+        if (state.lastCheckIn === getYesterday()) {
+          state.streak += 1;
+        } else {
+          state.streak = 1;
+        }
+
+        state.lastCheckIn = today;
+        state.basePoints += checkInPoints;
+        saveState(state);
+        render(state);
+      });
+    }
+
+    function initReset(state) {
+      const resetBtn = document.getElementById("resetBtn");
+      resetBtn.addEventListener("click", () => {
+        if (!confirm("Reset all progress, streak, and points?")) return;
+        state.basePoints = 0;
+        state.streak = 0;
+        state.lastCheckIn = "";
+        state.items = {};
+        saveState(state);
+        syncCheckboxes(state);
+        render(state);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      applyTracking();
+      const state = loadState();
+      syncCheckboxes(state);
+      bindCheckboxEvents(state);
+      initTabs();
+      initCheckIn(state);
+      initReset(state);
+      render(state);
+      const firstPhase = document.querySelector(".roadmap .phase-header");
+      if (firstPhase) togglePhase(firstPhase);
+    });
+  </script>
+</body>
+</html>
